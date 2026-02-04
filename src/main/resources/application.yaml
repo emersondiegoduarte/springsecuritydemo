@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: springsecuritydemo
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/springsecuritydemo
+    username: postgres
+    password: postgres
