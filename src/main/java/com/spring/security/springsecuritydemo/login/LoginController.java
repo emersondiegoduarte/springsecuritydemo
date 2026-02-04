@@ -13,5 +13,10 @@ public class LoginController {
         return "Hello USER: " + auth.getName();
     }
 
+    @GetMapping("/admin")
+    public String adminEndpoint(Authentication auth) {
+        return "Hello ADMIN: " + auth.getName();
+    }
+
 
 }
