@@ -7,3 +7,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/springsecuritydemo
     username: postgres
     password: postgres
+
+logging:
+  level:
+    org.springframework.security: TRACE
