@@ -1,6 +1,7 @@
 package com.spring.security.springsecuritydemo.login;
 
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,13 +10,15 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
 
     @GetMapping("/user")
-    public String userEndpoint(Authentication auth) {
-        return "Hello USER: " + auth.getName();
+    @PreAuthorize("hasRole('USER')")
+    public String userEndpoint() {
+        return "Hello USER: ";
     }
 
     @GetMapping("/admin")
-    public String adminEndpoint(Authentication auth) {
-        return "Hello ADMIN: " + auth.getName();
+    @PreAuthorize("hasRole('ADMIN')")
+    public String adminEndpoint() {
+        return "Hello ADMIN: ";
     }
 
 
