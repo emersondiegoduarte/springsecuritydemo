@@ -10,7 +10,7 @@ public class PathConfigs {
 
     @Bean(name = "publicPaths")
     public List<String> publicPaths() {
-        return List.of("/user");
+        return List.of("/user", "/login");
     }
 
     @Bean(name = "privatePaths")

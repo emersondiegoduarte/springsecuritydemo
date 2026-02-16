@@ -3,6 +3,9 @@ package com.spring.security.springsecuritydemo.security;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -67,6 +70,13 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(){
         var user1 = User.builder().username("admin").password(passwordEncoder().encode("admin")).roles("ADMIN").build();
         return new InMemoryUserDetailsManager(user1);
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(){
+        var autheticationProvider = new DaoAuthenticationProvider(userDetailsService());
+        autheticationProvider.setPasswordEncoder(passwordEncoder());
+        return new ProviderManager(autheticationProvider);
     }
 
     @Bean
