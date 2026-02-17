@@ -1,5 +1,6 @@
 package com.spring.security.springsecuritydemo.login.util;
 
+import com.spring.security.springsecuritydemo.usuario.Usuario;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,10 @@ public class JwtUtil {
         String jwtToken;
         String secret = JWT_SECRET_KEY;
         SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        var fetchedUser = (User) authentication.getPrincipal();
+        var fetchedUser = (Usuario) authentication.getPrincipal();
         jwtToken = Jwts.builder().issuer("Spring Security Demo").subject("JWT Token")
-                .claim("username", fetchedUser.getUsername())
+                .claim("username", fetchedUser.getEmail())
+                .claim("name", fetchedUser.getNome())
                 .claim("roles", authentication.getAuthorities().stream().map(
                         GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
                 .issuedAt(new java.util.Date())

@@ -52,6 +52,9 @@ public class LoginController {
                 loginRequest.password()));
         //Gerenerate Token
         String jwtToken = jwtUtil.generateJwtToken(auth);
+        var usuarioLogado = (Usuario) auth.getPrincipal();
+        BeanUtils.copyProperties(usuarioLogado, userDTO);
+        userDTO.setRole(usuarioLogado.getRoles());
         return ResponseEntity.ok(
                 new LoginResponse(HttpStatus.OK.getReasonPhrase(),
                         userDTO, jwtToken)

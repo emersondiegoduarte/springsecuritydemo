@@ -55,9 +55,9 @@ public class JwtValidationTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
         } catch (ExpiredJwtException e){
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            throw new RuntimeException(e.getMessage());
         } catch (Exception e){
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e.getMessage());
         }
 
     }

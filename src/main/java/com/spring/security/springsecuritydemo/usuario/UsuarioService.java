@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UsuarioService {
 
@@ -24,5 +26,9 @@ public class UsuarioService {
 
     public void salvarUsuario(Usuario usuario) {
         usuarioRepository.save(usuario);
+    }
+
+    public Optional<Usuario> buscarUsuarioPorEmail(String email) {
+        return usuarioRepository.findByEmailIgnoreCase(email);
     }
 }
