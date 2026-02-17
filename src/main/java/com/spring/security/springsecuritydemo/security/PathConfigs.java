@@ -10,12 +10,12 @@ public class PathConfigs {
 
     @Bean(name = "publicPaths")
     public List<String> publicPaths() {
-        return List.of("/user", "/login", "/register");
+        return List.of("/login", "/register");
     }
 
     @Bean(name = "privatePaths")
     public List<String> privatePaths() {
-        return List.of("/admin");
+        return List.of("/admin", "/user");
     }
 
 }

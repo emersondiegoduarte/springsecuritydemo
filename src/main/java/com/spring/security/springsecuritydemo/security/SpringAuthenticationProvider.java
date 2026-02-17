@@ -36,8 +36,9 @@ public class SpringAuthenticationProvider implements AuthenticationProvider {
         Usuario usuario = usuarioService.buscarUsuarioPorEmail(username)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
-        List<SimpleGrantedAuthority> authorities =
-                List.of(new SimpleGrantedAuthority(usuario.getRoles().iterator().next().getNome()));
+        List<SimpleGrantedAuthority> authorities = usuario.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getNome()))
+                .toList();
 
         if (passwordEncoder.matches(password, usuario.getSenha())) {
             return new UsernamePasswordAuthenticationToken(usuario, null, authorities);

@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Qualifier("publicPaths")
@@ -39,13 +41,14 @@ public class SecurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> {
                     publicPaths.forEach(path -> requests.requestMatchers(path).permitAll());
-                    privatePaths.forEach(path -> requests.requestMatchers(path).authenticated());
+                    privatePaths.forEach(path -> requests.requestMatchers(path)
+                            .hasRole("ADMIN"));
                     requests.anyRequest().denyAll();
                 })
                 .cors(corsConfigurationSource -> corsConfigurationSource.configurationSource(corsConfigurationSource()))
                 .addFilterBefore(new JwtValidationTokenFilter(publicPaths), BasicAuthenticationFilter.class)
                 .formLogin(flc -> flc.disable())
-                    .httpBasic(Customizer.withDefaults())
+                    .httpBasic(htp -> htp.disable())
                     .build();
     }
 

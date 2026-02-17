@@ -26,7 +26,7 @@ public class JwtUtil {
         String secret = JWT_SECRET_KEY;
         SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         var fetchedUser = (Usuario) authentication.getPrincipal();
-        jwtToken = Jwts.builder().issuer("Spring Security Demo").subject("JWT Token")
+        jwtToken = Jwts.builder().issuer("Spring Security Demo").subject(fetchedUser.getEmail())
                 .claim("username", fetchedUser.getEmail())
                 .claim("name", fetchedUser.getNome())
                 .claim("roles", authentication.getAuthorities().stream().map(

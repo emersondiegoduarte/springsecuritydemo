@@ -33,33 +33,29 @@ public class JwtValidationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            String authorizationHeader = request.getHeader("Authorization");
-            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")){
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            try {
+                String jwtToken = authorizationHeader.substring(7);
+                String secret = JwtUtil.JWT_SECRET_KEY;
+                SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+                Claims claims = Jwts.parser().verifyWith(secretKey).build().
+                        parseSignedClaims(jwtToken).getPayload();
+                String username = String.valueOf(claims.get("username"));
+                String roles = claims.get("roles").toString();
+
+                Authentication authentication = new UsernamePasswordAuthenticationToken(username, null,
+                        AuthorityUtils.commaSeparatedStringToAuthorityList(roles));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            } catch (Exception e) {
+                // Se o token for inválido, não autentica e deixa o Spring Security barrar (se necessário)
+                logger.error("Falha ao validar token JWT: " + e.getMessage());
             }
-
-            String jwtToken = authorizationHeader.substring(7);
-            String secret = JwtUtil.JWT_SECRET_KEY;
-            SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-            Claims claims = Jwts.parser().verifyWith(secretKey).build().
-                    parseSignedClaims(jwtToken).getPayload();
-            String username = claims.getSubject();
-            String roles = claims.get("roles").toString();
-
-            Authentication authentication = new UsernamePasswordAuthenticationToken(username, null,
-                    AuthorityUtils.commaSeparatedStringToAuthorityList(roles));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-
-            filterChain.doFilter(request, response);
-
-        } catch (ExpiredJwtException e){
-            throw new RuntimeException(e.getMessage());
-        } catch (Exception e){
-            throw new RuntimeException(e.getMessage());
         }
 
+        filterChain.doFilter(request, response);
     }
 
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {

@@ -33,13 +33,13 @@ public class LoginController {
     }
 
     @GetMapping("/user")
-    //@PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     public String userEndpoint() {
         return "Hello USER: ";
     }
 
     @GetMapping("/admin")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public String adminEndpoint() {
         return "Hello ADMIN: ";
     }
