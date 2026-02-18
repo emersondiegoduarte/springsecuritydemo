@@ -3,6 +3,7 @@ package com.spring.security.springsecuritydemo.login;
 import com.spring.security.springsecuritydemo.login.util.JwtUtil;
 import com.spring.security.springsecuritydemo.usuario.Usuario;
 import com.spring.security.springsecuritydemo.usuario.UsuarioService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping()
 public class LoginController {
@@ -41,6 +43,8 @@ public class LoginController {
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public String adminEndpoint() {
+        log.info("Teste de log");
+        usuarioService.buscarUsuarioPorEmail("diegodias@example.com");
         return "Hello ADMIN: ";
     }
 

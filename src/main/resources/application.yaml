@@ -8,3 +8,36 @@ spring:
     username: postgres
     password: postgres
 
+  jpa:
+    show-sql: true
+
+  otel:
+    propagation:
+      propagators: tracecontext,baggage
+    otlp:
+      metrics:
+        export:
+          url: http://localhost:4318/v1/metrics
+    opentelemetry:
+      propagation:
+        type: tracecontext,baggage
+      tracing:
+        export:
+          otlp:
+            endpoint: http://localhost:4318/v1/traces
+      logging:
+        export:
+          otlp:
+            endpoint: http://localhost:4318/v1/logs
+
+logging:
+  level:
+    com.spring.security.springsecuritydemo: INFO
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    export:
+      enabled: true
+

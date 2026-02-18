@@ -1,5 +1,6 @@
 package com.spring.security.springsecuritydemo.usuario;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
@@ -29,6 +31,7 @@ public class UsuarioService {
     }
 
     public Optional<Usuario> buscarUsuarioPorEmail(String email) {
+        log.info("Buscando usuário por email: {}", email);
         return usuarioRepository.findByEmailIgnoreCase(email);
     }
 }
