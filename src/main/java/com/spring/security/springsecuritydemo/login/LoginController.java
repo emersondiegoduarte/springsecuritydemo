@@ -3,6 +3,7 @@ package com.spring.security.springsecuritydemo.login;
 import com.spring.security.springsecuritydemo.login.util.JwtUtil;
 import com.spring.security.springsecuritydemo.usuario.Usuario;
 import com.spring.security.springsecuritydemo.usuario.UsuarioService;
+import io.micrometer.observation.annotation.Observed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,7 @@ public class LoginController {
 
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
+    @Observed(name = "endpoint_admin")
     public String adminEndpoint() {
         log.info("Teste de log");
         usuarioService.buscarUsuarioPorEmail("diegodias@example.com");
