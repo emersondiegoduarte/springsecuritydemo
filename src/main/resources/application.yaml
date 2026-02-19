@@ -35,6 +35,16 @@ logging:
     com.spring.security.springsecuritydemo: INFO
 
 management:
+  observations:
+    enable:
+      default: true
+  endpoint:
+    metrics:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
   tracing:
     sampling:
       probability: 1.0

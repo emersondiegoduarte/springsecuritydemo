@@ -3,6 +3,9 @@ package com.spring.security.springsecuritydemo.login;
 import com.spring.security.springsecuritydemo.login.util.JwtUtil;
 import com.spring.security.springsecuritydemo.usuario.Usuario;
 import com.spring.security.springsecuritydemo.usuario.UsuarioService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.observation.annotation.Observed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -27,12 +30,17 @@ public class LoginController {
 
     private final UsuarioService usuarioService;
 
+    private final Counter adminCounter;
 
-    public LoginController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, UsuarioService usuarioService) {
+
+    public LoginController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, UsuarioService usuarioService, MeterRegistry meterRegistry, ObservationRegistry registry) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
         this.usuarioService = usuarioService;
+        this.adminCounter = Counter.builder("rota_admin")
+                .description("Contador de acessos ao endpoint /admin")
+                .register(meterRegistry);
     }
 
     @GetMapping("/user")
@@ -43,8 +51,9 @@ public class LoginController {
 
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
-    @Observed(name = "endpoint_admin")
+    @Observed(name = "adminEndpoint")
     public String adminEndpoint() {
+        adminCounter.increment(1);
         log.info("Teste de log");
         usuarioService.buscarUsuarioPorEmail("diegodias@example.com");
         return "Hello ADMIN: ";

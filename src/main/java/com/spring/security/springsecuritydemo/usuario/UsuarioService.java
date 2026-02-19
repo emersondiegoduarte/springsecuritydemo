@@ -1,5 +1,6 @@
 package com.spring.security.springsecuritydemo.usuario;
 
+import io.micrometer.observation.annotation.Observed;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.User;
