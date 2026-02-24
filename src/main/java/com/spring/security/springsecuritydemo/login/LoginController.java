@@ -52,10 +52,11 @@ public class LoginController {
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
     @Observed(name = "adminEndpoint")
-    public String adminEndpoint() {
+    public String adminEndpoint() throws InterruptedException {
         adminCounter.increment(1);
         log.info("Teste de log");
         usuarioService.buscarUsuarioPorEmail("diegodias@example.com");
+        Thread.sleep(200);
         return "Hello ADMIN: ";
     }
 
